@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2> OTP Verification </h2>
+    <form action="#" id="phone-otp-submission">
+        <input type="text" name="otp" id="phone-field" placeholder="Enter otp">
+        <input type="submit" name="submit" value="Submit">
+        <div id ="otp-error">
+
+
+        </div>
+    </form>
+    <script>
+
+        const _ = (id) => document.getElementById(id);
+
+        _("phone-otp-submission").addEventListener("submit",(e) => {
+            e.preventDefault();
+            var url = new URL(window.location.href);
+            var phone = url.searchParams.get("phone");
+            var email = url.searchParams.get("email");
+            var token = localStorage.getItem('token');
+            var otp = _("phone-field").value;
+            const data = {
+                phone : phone,
+                otp : otp,
+                type : "phone",
+            }
+            
+            fetch ("http://192.168.1.39:5000/auth/otp-validate" , {
+                method : "POST",
+                headers : {
+                    "Content-Type" : "application/json",
+                    "Authorization" : `Bearer ${token}`
+                },
+                body : JSON.stringify(data)
+            }).then(res => res.json()).then(result => {
+                if(!result.status){
+                    _("otp-error").innerText = result.data[0].message;
+                }
+                else{
+                    window.location.href = "./email.html?email=" + email;
+                }
+            })
+        })    
+            
+    </script>
+</body>
+</html>

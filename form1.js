@@ -42,6 +42,8 @@ function submit(data){
                } 
            }
            else{
+               localStorage.setItem("token", result.data.token);
+               window.location.href = "./otp.html?phone=" + data.phone + "&email=" + data.email;
                console.log("Success");
            }
         //window.location.href = "./user.html?id=" + result.id;
